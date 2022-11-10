@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Basket from "./components/Basket";
 import Header from "./components/Header";
 import ProductList from "./components/ProductList";
+import { TaxProvider } from "./contexts/TaxContext";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -47,9 +48,15 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <Header />
-      <ProductList products={products} addToCart={addToCart} />
-      <Basket removeFromCart={removeFromCart} products={products} cart={cart} />
+      <TaxProvider>
+        <Header />
+        <ProductList products={products} addToCart={addToCart} />
+        <Basket
+          removeFromCart={removeFromCart}
+          products={products}
+          cart={cart}
+        />
+      </TaxProvider>
     </div>
   );
 }
