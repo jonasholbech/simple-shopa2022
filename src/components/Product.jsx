@@ -2,9 +2,12 @@ import { useContext } from "react";
 import { TaxContext } from "../contexts/TaxContext";
 function Product(props) {
   const taxes = useContext(TaxContext);
-  console.log(taxes);
+
   function add() {
-    props.addToCart(props.data);
+    props.dispatch({
+      type: "ADD",
+      payload: props.data,
+    });
   }
   return (
     <article className="Product">
