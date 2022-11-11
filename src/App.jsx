@@ -1,43 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import Basket from "./components/Basket";
 import Header from "./components/Header";
 import ProductList from "./components/ProductList";
 import { TaxProvider } from "./contexts/TaxContext";
-
+import { reducer } from "./reducers/cartReducer";
 function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  function addToCart(data) {
-    //do we have the product
-    if (cart.find((entry) => entry.id === data.id)) {
-      setCart((oldCart) =>
-        oldCart.map((entry) => {
-          if (entry.id !== data.id) {
-            return entry;
-          }
-          const copy = { ...entry };
-          copy.amount = copy.amount + 1;
-          return copy;
-        })
-      );
-    } else {
-      setCart((oldCart) => oldCart.concat({ ...data, amount: 1 }));
-    }
-  }
-  function removeFromCart(id) {
-    //find and modify a product
-    setCart((oldCart) => {
-      const subtracted = oldCart.map((item) => {
-        if (item.id === id) {
-          return { ...item, amount: item.amount - 1 };
-        }
-        return item;
-      });
-      const filtered = subtracted.filter((item) => item.amount > 0);
-      return filtered;
-    });
-    //filter
-  }
+  const initialState = [];
+  const [cart, dispatch] = useReducer(reducer, initialState);
+
   useEffect(() => {
     async function getData() {
       const res = await fetch("https://kea-alt-del.dk/t7/api/products");
@@ -50,12 +21,8 @@ function App() {
     <div className="App">
       <TaxProvider>
         <Header />
-        <ProductList products={products} addToCart={addToCart} />
-        <Basket
-          removeFromCart={removeFromCart}
-          products={products}
-          cart={cart}
-        />
+        <ProductList products={products} dispatch={dispatch} />
+        <Basket dispatch={dispatch} products={products} cart={cart} />
       </TaxProvider>
     </div>
   );
