@@ -1,6 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import { insertOrder } from "../modules/db";
+import { CartContext, CartDispatchContext } from "../contexts/CartContext";
 function CheckoutForm(props) {
+  const cart = useContext(CartContext);
+  const dispatch = useContext(CartDispatchContext);
   const theForm = useRef(null);
   const [paymentCompleted, setPaymentCompleted] = useState(false);
 
@@ -10,9 +13,12 @@ function CheckoutForm(props) {
       name: theForm.current.elements.name.value,
       email: theForm.current.elements.email.value,
       address: theForm.current.elements.address.value,
-      basket: props.cart,
+      basket: cart,
     });
     if (response && response.length) {
+      dispatch({
+        type: "CLEAR",
+      });
       setPaymentCompleted(true);
     }
   }

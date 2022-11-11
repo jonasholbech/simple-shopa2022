@@ -1,5 +1,7 @@
 export const reducer = (state, action) => {
   switch (action.type) {
+    case "CLEAR":
+      return [];
     case "ADD":
       if (state.find((entry) => entry.id === action.payload.id)) {
         return state.map((entry) => {

@@ -3,11 +3,10 @@ import Basket from "./components/Basket";
 import Header from "./components/Header";
 import ProductList from "./components/ProductList";
 import { TaxProvider } from "./contexts/TaxContext";
-import { reducer } from "./reducers/cartReducer";
+import { CartProvider } from "./contexts/CartContext";
+//import { reducer } from "./reducers/cartReducer";
 function App() {
   const [products, setProducts] = useState([]);
-  const initialState = [];
-  const [cart, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function getData() {
@@ -19,11 +18,13 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <TaxProvider>
-        <Header />
-        <ProductList products={products} dispatch={dispatch} />
-        <Basket dispatch={dispatch} products={products} cart={cart} />
-      </TaxProvider>
+      <CartProvider>
+        <TaxProvider>
+          <Header />
+          <ProductList products={products} />
+          <Basket products={products} />
+        </TaxProvider>
+      </CartProvider>
     </div>
   );
 }

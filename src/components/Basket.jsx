@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import CheckoutForm from "./CheckoutForm";
+import { CartContext, CartDispatchContext } from "../contexts/CartContext";
 function Basket(props) {
+  const cart = useContext(CartContext);
+  const dispatch = useContext(CartDispatchContext);
   const [showForm, setShowForm] = useState(false);
   function getTotal() {
     let total = 0;
-    props.cart.forEach((item) => {
+    cart.forEach((item) => {
       total += item.amount * item.price;
     });
     return total;
@@ -12,13 +15,13 @@ function Basket(props) {
   return (
     <section className="Basket">
       <ul>
-        {props.cart.map((item) => (
+        {cart.map((item) => (
           <li key={item.id}>
             {item.productdisplayname} x {item.amount},{" "}
             {item.amount * item.price},-
             <button
               onClick={() =>
-                props.dispatch({
+                dispatch({
                   type: "REMOVE",
                   payload: {
                     id: item.id,
@@ -33,7 +36,7 @@ function Basket(props) {
       </ul>
       <h3>Total: {getTotal()},-</h3>
       {!showForm && <button onClick={() => setShowForm(true)}>Buy now</button>}
-      {showForm && <CheckoutForm cart={props.cart} />}
+      {showForm && <CheckoutForm />}
     </section>
   );
 }
